@@ -1,0 +1,9 @@
+src/create_fs
+src/create_fs.o
+src/disk0
+src/fs
+src/main.o
+tests/CMakeFiles/*
+tests/cmake_install.cmake
+tests/CMakeCache.txt
+tests/Makefile
