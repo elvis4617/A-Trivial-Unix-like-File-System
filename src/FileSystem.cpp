@@ -29,7 +29,6 @@ public:
    // open the file with the above name
    // this file will act as the "disk" for your file system
    disk.open(diskName);
-
   }
 
   int create_file(char name[8], int size)
