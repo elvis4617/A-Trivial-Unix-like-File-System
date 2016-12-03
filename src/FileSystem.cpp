@@ -28,7 +28,7 @@ public:
   {
    // open the file with the above name
    // this file will act as the "disk" for your file system
-
+   disk.open(diskName);	
   }
 
   int create_file(char name[8], int size)
@@ -171,7 +171,7 @@ public:
   {
     // close the file(disk) opened in the constructor
     // this is to check the persistency of file system
-    return 0;
+    disk.close();
   }
 
 };
