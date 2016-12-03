@@ -1,0 +1,24 @@
+##How to run test cases
+
+run the following commands on Edlab machine inside ‘tests’ directory:
+
+cmake CMakeLists.txt
+./script.sh
+
+##How to write test cases
+
+We have given 2 sample test cases. One for testing if bounded buffer is empty and one for testing append and remove function.
+
+To write your own test cases, follow the template given in tests.cpp.
+
+Basic assertions include:
+
+ASSERT_TRUE(condition);	//fatal
+EXPECT_TRUE(condition); //nonfatal
+ASSERT_FALSE(condition);	
+EXPECT_FALSE(condition);
+ASSERT_EQ(val1,val2);
+EXPECT_EQ(val1,val2);
+
+You can find more details from the link below:
+https://github.com/google/googletest/blob/master/googletest/docs/Primer.md 
