@@ -218,16 +218,34 @@ public:
     // Read in an inode
     // If the inode is in use, compare the "name" field with the above file
     // If the file names don't match, repeat
-
+  	disk.seekg(128, ios::beg);
+  	char* inodeBuff = new char[48];
+  	idxNode* inode = NULL;
+  	for(int i = 0; i<16; i++){
+    	disk.read(inodeBuff, 48);
+    	idxNode* tempinode = (idxNode*) inodeBuff;
+    if(tempinode->used && strcmp(tempinode->name, name)){
+      	inode = tempinode;
+      	break;
+    	}
+  	}
+  
     // Step 2: Read in the specified block
     // Check that blockNum < inode.size, else flag an error
     // Get the disk address of the specified block
     // That is, addr = inode.blockPointer[blockNum]
     // Move the file pointer to the block location (i.e., to byte #
     //   addr*1024 in the file)
-
+  	if(blockNum < inode->size){
+  		int addr = inode->blockPointers[blockNum];
+  		disk.seekg(addr*1024, ios::beg);
+  	}
+  	else{
+  		printf("error");
+  	}
     // Read in the block => Read in 1024 bytes from this location
     //   into the buffer "buf"
+    disk.read(buf, 1024);
     return 0;
   } // End read
 
