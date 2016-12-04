@@ -140,6 +140,7 @@ public:
       if(tempNode -> used == 1 && !strcmp(tempNode -> name, name)){
         inode = tempNode;
         inodeIdx = i;
+        break;
       }
     }
     if(inode == NULL) return -1;
@@ -260,6 +261,18 @@ public:
     // Read in a inode
     // If the inode is in use, compare the "name" field with the above file
     // If the file names don't match, repeat
+    disk.seekg(128, ios::beg);
+    char* inodeBuff = new char[48];
+    idxNode* inode = NULL;
+    for(int i = 0; i<16; i++){
+      disk.read(inodeBuff, 48);
+      idxNode* tempNode = (idxNode*) inodeBuff;
+      if(tempNode -> used == 1 && !strcmp(tempNode -> name, name)){
+        inode = tempNode;
+        break;
+      }
+    }
+    if(inode == NULL) return -1;
 
     // Step 2: Write to the specified block
     // Check that blockNum < inode.size, else flag an error
@@ -269,8 +282,13 @@ public:
 
     // Write the block! => Write 1024 bytes from the buffer "buff" to
     //   this location
+    if(blockNum > inode -> size) return -1;
+    int diskAddr = inode -> blockPointers[blockNum];
+    disk.seekp(1024*diskAddr, ios::beg);
 
-    return 0;
+    disk.write(buf, 1024);
+
+    return 1;
   } // end write
 
   int close_disk()
