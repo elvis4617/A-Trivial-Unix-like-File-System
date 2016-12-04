@@ -31,8 +31,8 @@ public:
    disk.open(diskName);
   }
 
-  int create_file(char name[8], int size)
-  {
+  int create_file(char name[8], int size){
+  if(size > 8) return -1;
 
   //create a file with this name and this size
   // high level pseudo code for creating a new file
@@ -43,7 +43,7 @@ public:
   // Read the first 128 bytes (the free/in-use block information)
   // Scan the list to make sure you have sufficient free blocks to
   // allocate a new file of this size
-  disk.seekp(0, ios::beg);
+  disk.seekg(0, ios::beg);
   char* buff = new char[128];
   if(disk.is_open()){
     disk.read(buff, 128);
@@ -63,16 +63,19 @@ public:
   // Copy the filename to the "name" field
   // Copy the file size (in units of blocks) to the "size" field
 
+  int inodeIdx;
   char* inodeBuff = new char[48];
-  idxNode* inode;
+  idxNode* inode = NULL;
   for(int i = 0; i<16;i++){
     disk.read(inodeBuff, 48);
     idxNode* tempNode = (idxNode*) inodeBuff;
-    if(tempNode -> used == 0){
+    if(tempNode -> used == 0 && inode == NULL){
       inode = tempNode;
-      break;
-    }
+      inodeIdx = i;
+    }else if(tempNode -> used && !strcmp(tempNode -> name, name))
+      return -1;
   }
+
   if(inode == NULL) return -1;
 
   // Step 3: Allocate data blocks to the file
@@ -96,6 +99,9 @@ public:
       count++;
     }
   }
+  strcpy(inode -> name, name);
+  inode -> size = size;
+  inode -> used = 1;
 
   // Step 4: Write out the inode and free block list to disk
   //  Move the file pointer to the start of the file
@@ -104,6 +110,7 @@ public:
   // Write out the inode
   disk.seekp(0, ios::beg);
   disk.write(buff, 128);
+  disk.seekp(128+48*inodeIdx, ios::beg);
   disk.write((char*) inode, 48);
 
   return 1;
