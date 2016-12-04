@@ -78,6 +78,28 @@ TEST(FSTest, list_file) {
 	ASSERT_EQ(1,f.ls());
 }
 
+//test write
+//return code 1 for success
+//return code -1 for failure
+TEST(FSTest, write_file_not_exist) {
+	myFileSystem f ((char*) "disk0");
+	char* data = new char[1024];
+	for(int i = 0; i< 1024; i++)
+		data[i] = i;
+	ASSERT_EQ(-1,f.write((char*)"test.c", 0, data));
+}
+
+//test write
+//return code 1 for success
+//return code -1 for failure
+TEST(FSTest, write_file) {
+	myFileSystem f ((char*) "disk0");
+	char* data = new char[1024];
+	for(int i = 0; i< 1024; i++)
+		data[i] = i;
+	ASSERT_EQ(1,f.write((char*)"1.c", 0, data));
+}
+
 
 int main(int argc, char **argv) {
     testing::InitGoogleTest(&argc, argv);
