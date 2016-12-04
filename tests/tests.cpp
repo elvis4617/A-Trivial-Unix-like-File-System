@@ -85,7 +85,7 @@ TEST(FSTest, write_file_not_exist) {
 	myFileSystem f ((char*) "disk0");
 	char* data = new char[1024];
 	for(int i = 0; i< 1024; i++)
-		data[i] = i;
+		data[i] = 1;
 	ASSERT_EQ(-1,f.write((char*)"test.c", 0, data));
 }
 
@@ -96,7 +96,7 @@ TEST(FSTest, write_file) {
 	myFileSystem f ((char*) "disk0");
 	char* data = new char[1024];
 	for(int i = 0; i< 1024; i++)
-		data[i] = i;
+		data[i] = 1;
 	ASSERT_EQ(1,f.write((char*)"1.c", 0, data));
 }
 //test read when file not in disk
@@ -107,7 +107,7 @@ TEST(FSTest, read_file_not_exist){
 	myFileSystem f ((char*) "disk0");
 	char* data = new char[1024];
 	for(int i = 0; i< 1024; i++)
-		data[i] = i;
+		data[i] = 1;
 	ASSERT_EQ(-1,f.read((char*)"test.c", 0, data));
 }
 
@@ -115,12 +115,16 @@ TEST(FSTest, read_file_not_exist){
 //return code -1 for failure
 //return code 1 for success
 //1.c is a file in disk, should return 1
+//the buff should contain the int array that write to it on previous test.
 TEST(FSTest, read_file){
 	myFileSystem f ((char*) "disk0");
+	char* buff = new char[1024];
 	char* data = new char[1024];
 	for(int i = 0; i< 1024; i++)
-		data[i] = i;
-	ASSERT_EQ(1,f.read((char*)"1.c", 0, data));
+		data[i] = 1;
+	ASSERT_EQ(1,f.read((char*)"1.c", 0, buff));
+	for(int i = 0; i< 1024; i++)
+		ASSERT_EQ(data[i], buff[i]);
 }
 
 
