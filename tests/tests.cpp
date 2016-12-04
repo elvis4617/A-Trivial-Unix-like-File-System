@@ -99,6 +99,29 @@ TEST(FSTest, write_file) {
 		data[i] = i;
 	ASSERT_EQ(1,f.write((char*)"1.c", 0, data));
 }
+//test read when file not in disk
+//return code -1 for failure
+//return code 1 for success
+//test.c not a file in disk should return -1
+TEST(FSTest, read_file_not_exist){
+	myFileSystem f ((char*) "disk0");
+	char* data = new char[1024];
+	for(int i = 0; i< 1024; i++)
+		data[i] = i;
+	ASSERT_EQ(-1,f.read((char*)"test.c", 0, data));
+}
+
+//test read when file is in disk
+//return code -1 for failure
+//return code 1 for success
+//1.c is a file in disk, should return 1
+TEST(FSTest, read_file){
+	myFileSystem f ((char*) "disk0");
+	char* data = new char[1024];
+	for(int i = 0; i< 1024; i++)
+		data[i] = i;
+	ASSERT_EQ(1,f.read((char*)"1.c", 0, data));
+}
 
 
 int main(int argc, char **argv) {
