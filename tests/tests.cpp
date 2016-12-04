@@ -70,6 +70,13 @@ TEST(FSTest, delete_file) {
 	ASSERT_EQ(1,f.delete_file((char*)"1.c"));
 }
 
+//test list_file
+//return code 1 for success
+//return code -1 for failure
+TEST(FSTest, list_file) {
+	myFileSystem f ((char*) "disk0");
+	ASSERT_EQ(1,f.ls());
+}
 
 
 int main(int argc, char **argv) {

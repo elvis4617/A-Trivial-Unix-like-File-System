@@ -193,7 +193,18 @@ public:
     // If the inode is in-use
       // print to list.txt the "name" and "size" fields from the inode
   // end for
-    return 0;
+  disk.seekg(128, ios::beg);
+  ofstream o("list.txt");
+  char* inodeBuff = new char[48];
+  for(int i = 0; i<16; i++){
+    disk.read(inodeBuff, 48);
+    idxNode* inode = (idxNode*) inodeBuff;
+    if(inode -> used == 1){
+      o << "file name: "<< inode -> name << " size: " << inode -> size << endl;
+    }
+  }
+  o.close();
+  return 1;
 
   } // End ls
 
