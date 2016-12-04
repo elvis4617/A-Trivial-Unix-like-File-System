@@ -231,7 +231,7 @@ public:
     	}
   	}
   	if(inode == NULL) return -1;
-  
+
     // Step 2: Read in the specified block
     // Check that blockNum < inode.size, else flag an error
     // Get the disk address of the specified block
@@ -248,7 +248,7 @@ public:
     // Read in the block => Read in 1024 bytes from this location
     //   into the buffer "buf"
     disk.read(buf, 1024);
-    return 0;
+    return 1;
   } // End read
 
 
