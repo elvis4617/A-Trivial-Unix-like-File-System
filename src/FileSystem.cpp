@@ -45,9 +45,10 @@ public:
   // allocate a new file of this size
   disk.seekg(0, ios::beg);
   char* buff = new char[128];
-  if(disk.is_open()){
+  if(disk.is_open())
     disk.read(buff, 128);
-  }
+  else
+    return -1;
   int freeSpace = 0;
   for(int i = 0; i<128; i++){
     if(buff[i] == 0) freeSpace++;
@@ -129,6 +130,19 @@ public:
     // If the inode is in use, check if the "name" field in the
     //   inode matches the file we want to delete. If not, read the next
     //   inode and repeat
+    disk.seekg(128, ios::beg);
+    char* inodeBuff = new char[48];
+    idxNode* inode = NULL;
+    int inodeIdx;
+    for(int i = 0; i<16; i++){
+      disk.read(inodeBuff, 48);
+      idxNode* tempNode = (idxNode*) inodeBuff;
+      if(tempNode -> used == 1 && !strcmp(tempNode -> name, name)){
+        inode = tempNode;
+        inodeIdx = i;
+      }
+    }
+    if(inode == NULL) return -1;
 
     // Step 2: free blocks of the file being deleted
     // Read in the 128 byte free block list (move file pointer to start
@@ -137,16 +151,34 @@ public:
     // for(i=0;i< inode.size; i++)
       // freeblockList[ inode.blockPointer[i] ] = 0;
 
+      disk.seekg(0, ios::beg);
+      char* buff = new char[128];
+      if(disk.is_open())
+        disk.read(buff, 128);
+      else
+        return -1;
+      for(int i = 0; i < inode -> size; i++){
+        if(inode->blockPointers[i] != 0)
+          buff[inode->blockPointers[i]] = 0;
+      }
+
+
     // Step 3: mark inode as free
     // Set the "used" field to 0.
+    inode -> used = 0;
 
     // Step 4: Write out the inode and free block list to disk
     // Move the file pointer to the start of the file
     // Write out the 128 byte free block list
     // Move the file pointer to the position on disk where this inode was stored
     // Write out the inode
+    disk.seekp(0, ios::beg);
+    disk.write(buff, 128);
+    disk.seekp(128+48*inodeIdx, ios::beg);
+    disk.write((char*) inode, 48);
 
-    return 0;
+
+    return 1;
   } // End Delete
 
 

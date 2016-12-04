@@ -52,18 +52,23 @@ TEST(FSTest, create_file_max_file_and_max_disk) {
 	ASSERT_EQ(-1,f.create_file((char*)"17.c",8));
 }
 
-//test delete_file return code -1 for failure
-TEST(FSTest, delete_file_test) {
+//test delete_file for filename that is not existed.
+//return code 1 for success
+//return code -1 for failure
+TEST(FSTest, delete_file_not_exist) {
 	myFileSystem f ((char*) "disk1");
 	int code = f.delete_file((char*)"test.c");
 	ASSERT_EQ(-1,code);
 }
 
-//TODO: add test cases here
-
-// TEST(test_case_name, test_name) {
-//  ... test body ...
-// }
+//test delete_file
+//return code 1 for success
+//return code -1 for failure
+TEST(FSTest, delete_file) {
+	myFileSystem f ((char*) "disk1");
+	f.create_file((char*)"1.c",5);
+	ASSERT_EQ(1,f.delete_file((char*)"1.c"));
+}
 
 
 
