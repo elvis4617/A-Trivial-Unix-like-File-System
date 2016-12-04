@@ -225,7 +225,7 @@ public:
   	for(int i = 0; i<16; i++){
     	disk.read(inodeBuff, 48);
     	idxNode* tempinode = (idxNode*) inodeBuff;
-    if(tempinode->used && strcmp(tempinode->name, name)){
+    if(tempinode->used == 1 && !strcmp(tempinode->name, name)){
       	inode = tempinode;
       	break;
     	}
