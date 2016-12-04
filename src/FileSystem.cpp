@@ -201,7 +201,7 @@ public:
     disk.read(inodeBuff, 48);
     idxNode* inode = (idxNode*) inodeBuff;
     if(inode -> used == 1){
-      o << "file name: "<< inode -> name << " size: " << inode -> size << endl;
+      o <<inode -> name<< " " << inode -> size << endl;
     }
   }
   o.close();
